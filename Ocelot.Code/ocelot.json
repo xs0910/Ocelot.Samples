@@ -1,0 +1,80 @@
+{
+  "GlobalConfiguration": {
+    "ServiceDiscoveryProvider": {
+      "Scheme": "http",
+      "Host": "localhost",
+      "Port": 8500,
+      "Type": "Consul"
+    }
+  },
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/OcelotTestConsul/{url}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamScheme": "http",
+      "UseServiceDiscover": true,
+      "ServiceName": "ServiceAPI1Name",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/OcelotTest1/{url}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamScheme": "http",
+      "Key": "Service1",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8001
+        },
+        {
+          "Host": "localhost",
+          "Port": 9001
+        }
+      ],
+      "LoadBalancerOptions": { "Type": "RoundRobin" } // 负载均衡，配置轮询
+    },
+    {
+      "UpstreamPathTemplate": "/OcelotTest2/{url}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamScheme": "http",
+      "Key": "Service2",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8002
+        },
+        {
+          "Host": "localhost",
+          "Port": 9002
+        }
+      ],
+      "LoadBalanceOptions": { "Type": "RoundRobin" } // 负载均衡，配置轮询
+    },
+    {
+      "UpstreamPathTemplate": "/{url}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamPathTemplate": "/{url}",
+      "DownstreamScheme": "http",
+      "Priority": 0, // 优先级最低
+      "RouteIsCaseSensitive": true, // 设置敏感
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8001
+        }
+      ]
+    }
+  ],
+  // 聚合
+  "Aggregates": [
+    {
+      "RouteKeys": [ "Service1", "Service2" ],
+      "UpStreamPathTemplate": "/Aggregates/Service1And2/{url}"
+    }
+  ]
+}

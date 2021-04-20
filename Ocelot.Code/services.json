@@ -1,0 +1,35 @@
+{
+  // consul的json文件，放在consul_1.9.1/config文件夹下 ,这行注释要删掉
+  "services": [
+    {
+      "id": "ServiceAPI1",
+      "name": "ServiceAPI1Name",
+      "tags": [ "primary" ],
+      "address": "localhost",
+      "port": 8001,
+      "checks": [
+        {
+          "name": "ServiceAPI1_Check",
+          "http": "http://127.0.0.1:8001/api/Health",
+          "interval": "5s",
+          "timeout": "20s"
+        }
+      ]
+    },
+    {
+      "id": "ServiceAPI2",
+      "name": "ServiceAPI2Name",
+      "tags": [ "primary" ],
+      "address": "localhost",
+      "port": 8002,
+      "checks": [
+        {
+          "name": "ServiceAPI2_Check",
+          "http": "http://127.0.0.1:8002/api/Health",
+          "interval": "5s",
+          "timeout": "20s"
+        }
+      ]
+    }
+  ]
+}
